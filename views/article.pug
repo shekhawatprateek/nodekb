@@ -5,13 +5,16 @@ block content
     table.table.table-dark
         tr
             th Author
-            th= article.author
+            th= author
         tr
             th Description
             th= article.body
 
-    a.btn.btn-success(href="/articles/edit/"+article._id) Edit
-    br
+    if user
+        if user.id ==article.author
 
-    br
-    a.btn.btn-danger.delete-article(href="#", data-id=article._id) Delete
+            a.btn.btn-success(href="/articles/edit/"+article._id) Edit
+            br
+
+            br
+            a.btn.btn-danger.delete-article(href="#", data-id=article._id) Delete

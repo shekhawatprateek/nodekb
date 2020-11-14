@@ -4,9 +4,11 @@ let mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 var session = require("express-session");
 const { check, validationResult } = require("express-validator");
+const passport = require('passport');
 const flash = require("connect-flash");
+const config = require('./config/database');
 
-mongoose.connect("mongodb://localhost/nodekb");
+mongoose.connect(config.database);
 let db = mongoose.connection;
 
 // check connection
@@ -55,6 +57,17 @@ app.use(function (req, res, next) {
   next();
 });
 
+// Passport Config 
+require('./config/passport')(passport);
+// Passport Middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('*', (req, res, next) => {
+  res.locals.user = req.user || null;
+  next();
+});
+
 // Home Route
 app.get("/", (req, res) => {
   Article.find({}, function (err, articles) {
@@ -69,10 +82,13 @@ app.get("/", (req, res) => {
   });
 });
 
+// Route Files 
 let articles = require('./routes/articles');
+let users = require('./routes/users');
 app.use('/articles', articles);
-
+app.use('/users', users);
+ 
 // Start Server
-app.listen(3000, () => {
+app.listen(5000, () => {
   console.log("Server Started...");
 });
