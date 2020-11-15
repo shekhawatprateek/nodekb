@@ -114,14 +114,13 @@ router.delete("/:id", (req, res) => {
     (err, article) => {
       if (article.author != req.user._id) {
         res.status(500).send();
-      } else {
+      } 
         Article.remove(query, (err) => {
           if (err) {
             console.log(err);
           }
           res.send("Success");
         });
-      }
     };
 });
 
